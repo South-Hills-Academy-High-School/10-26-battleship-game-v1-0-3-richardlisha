@@ -146,7 +146,7 @@ function isHitOrMiss (enemyBoats: Sprite[][], hitOrMissPX: Sprite[]) {
                     `, SpriteKind.Projectile)
                 grid.place(boomSprite, grid.getLocation(cursor))
                 hitOrMissPX.push(boomSprite)
-                game.splash("" + currentPlayer + "   HIT!!")
+                game.splash("" + currentPlayer + "   HIT!!" + convertToText(isplayerXWinner(enemyBoats, hitOrMissPX)) + "boats destroyed!")
                 return 1
             }
         }
@@ -557,6 +557,24 @@ function turnBoat (boatNum: number, boatRotateArray: string[]) {
         boatRotateArray[boatNum] = "up"
     }
 }
+function isplayerXWinner (enenmyboat: Sprite[][], hitOrMissPX: Sprite[]) {
+    KillCount = 0
+    for (let index = 0; index <= 2; index++) {
+        currentBoatBoomCounter = 0
+        for (let currentBoatSprite of enenmyboat[index]) {
+            for (let currentBoomSprite of hitOrMissPX) {
+                if (grid.spriteRow(currentBoomSprite) == grid.spriteRow(currentBoatSprite) && grid.spriteCol(currentBoomSprite) == grid.spriteCol(currentBoatSprite)) {
+                    currentBoatBoomCounter = 1
+                    break;
+                }
+            }
+        }
+        if (currentBoatBoomCounter == enenmyboat[index].length) {
+            KillCount += 1
+        }
+    }
+    return KillCount
+}
 function isOverlapping (boatSpriteArrayPX: Sprite[][]) {
     for (let index2 = 0; index2 <= currentBoat - 1; index2++) {
         for (let previousBoatSprite of boatSpriteArrayPX[index2]) {
@@ -569,6 +587,8 @@ function isOverlapping (boatSpriteArrayPX: Sprite[][]) {
     }
     return 0
 }
+let currentBoatBoomCounter = 0
+let KillCount = 0
 let boomSprite: Sprite = null
 let iterator = 0
 let hitOrMissP2: Sprite[] = []
